@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NodeHarvest · 产品需求文档与共识备忘</title>
+<style>
+:root {
+  --bg: #f8f7f5;
+  --card: #ffffff;
+  --ink: #1a1a1a;
+  --ink2: #4a4a4a;
+  --ink3: #888;
+  --border: #e0ddd7;
+  --border-strong: #ccc8c0;
+  --primary: #1e3a5f;
+  --primary-light: #e8f0f8;
+  --accent: #2563eb;
+  --accent-light: #eff6ff;
+  --gold: #8b6914;
+  --gold-light: #fef9e7;
+  --green: #15803d;
+  --green-light: #f0fdf4;
+  --red: #b91c1c;
+  --red-light: #fef2f2;
+  --orange: #c2410c;
+  --orange-light: #fff7ed;
+  --purple: #6b21a8;
+  --purple-light: #faf5ff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  font-size: 15px;
+}
+
+/* Document header */
+.doc-header {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #fff;
+  padding: 48px 32px 40px;
+}
+.doc-header .doc-type {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.12);
+  padding: 4px 12px;
+  border-radius: 3px;
+  margin-bottom: 16px;
+}
+.doc-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.doc-header .doc-subtitle {
+  font-size: 15px;
+  color: #94a3b8;
+  margin-bottom: 24px;
+}
+.doc-header .doc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+.doc-header .doc-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.doc-header .doc-meta strong {
+  color: #fff;
+}
+
+/* Container */
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+/* Table of contents */
+.toc {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+.toc h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink3);
+  margin-bottom: 12px;
+}
+.toc ol {
+  list-style: none;
+  counter-reset: toc;
+  columns: 2;
+  column-gap: 24px;
+}
+.toc ol li {
+  counter-increment: toc;
+  margin-bottom: 6px;
+  font-size: 14px;
+  break-inside: avoid;
+}
+.toc ol li::before {
+  content: counter(toc, decimal-leading-zero);
+  color: var(--ink3);
+  font-weight: 600;
+  margin-right: 8px;
+  font-size: 12px;
+}
+.toc a {
+  color: var(--ink2);
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+.toc a:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Section */
+.section {
+  margin-bottom: 40px;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.section-title .num {
+  font-size: 13px;
+  color: var(--ink3);
+  font-weight: 400;
+}
+.subsection-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 24px 0 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--accent);
+}
+
+/* Paragraph */
+p {
+  margin-bottom: 12px;
+  color: var(--ink2);
+}
+p strong {
+  color: var(--ink);
+}
+
+/* Callout */
+.callout {
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+.callout-info {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+}
+.callout-warn {
+  background: var(--orange-light);
+  border-left: 3px solid var(--orange);
+}
+.callout-consensus {
+  background: var(--green-light);
+  border-left: 3px solid var(--green);
+}
+.callout-tip {
+  background: var(--gold-light);
+  border-left: 3px solid var(--gold);
+}
+.callout strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Status badges */
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+}
+.badge-done { background: var(--green-light); color: var(--green); border: 1px solid #bbf7d0; }
+.badge-wip { background: var(--accent-light); color: var(--accent); border: 1px solid #bfdbfe; }
+.badge-pending { background: var(--orange-light); color: var(--orange); border: 1px solid #fed7aa; }
+.badge-open { background: var(--red-light); color: var(--red); border: 1px solid #fecaca; }
+
+/* Data table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.data-table th {
+  background: #f5f3f0;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink);
+  border-bottom: 2px solid var(--border-strong);
+}
+.data-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink2);
+  vertical-align: top;
+}
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+.data-table tr:hover td {
+  background: #faf9f7;
+}
+
+/* Feature card */
+.feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+.feature-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  position: relative;
+}
+.feature-card .fc-num {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--border-strong);
+  line-height: 1;
+}
+.feature-card h4 {
+  font-size: 16px;
+  margin-bottom: 6px;
+  color: var(--primary);
+}
+.feature-card .fc-tag {
+  font-size: 11px;
+  color: var(--ink3);
+  margin-bottom: 10px;
+}
+.feature-card p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Architecture diagram */
+.arch-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.arch-node {
+  flex: 1;
+  min-width: 140px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px;
+  text-align: center;
+  position: relative;
+}
+.arch-node h5 {
+  font-size: 14px;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+.arch-node p {
+  font-size: 12px;
+  color: var(--ink3);
+  margin: 0;
+}
+.arch-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  color: var(--border-strong);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Role card */
+.role-card {
+  display: flex;
+  gap: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 12px 0;
+}
+.role-card .role-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.role-card .role-body {
+  flex: 1;
+}
+.role-card .role-body h5 {
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+.role-card .role-body .role-label {
+  font-size: 12px;
+  color: var(--ink3);
+  margin-bottom: 6px;
+}
+.role-card .role-body p {
+  font-size: 13px;
+  margin: 0;
+}
+
+/* Unresolved item */
+.unresolved-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--red);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin: 12px 0;
+}
+.unresolved-item .ui-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.unresolved-item .ui-id {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  background: var(--red-light);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+.unresolved-item h5 {
+  font-size: 14px;
+  flex: 1;
+}
+.unresolved-item p {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.unresolved-item .ui-context {
+  font-size: 12px;
+  color: var(--ink3);
+  background: #faf9f7;
+  padding: 6px 10px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 24px;
+  margin: 20px 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 2px solid var(--accent);
+}
+.timeline-item.done::before {
+  background: var(--green);
+  border-color: var(--green);
+}
+.timeline-item .ti-time {
+  font-size: 12px;
+  color: var(--ink3);
+  margin-bottom: 2px;
+}
+.timeline-item .ti-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.timeline-item .ti-desc {
+  font-size: 13px;
+  color: var(--ink2);
+}
+
+/* Glossary */
+.glossary-item {
+  margin: 12px 0;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.glossary-item .term {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 14px;
+}
+.glossary-item .term-en {
+  font-size: 12px;
+  color: var(--ink3);
+  font-weight: 400;
+  margin-left: 6px;
+}
+.glossary-item p {
+  font-size: 13px;
+  margin: 4px 0 0;
+}
+
+/* Footer */
+.doc-footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink3);
+  text-align: center;
+}
+
+/* Consensus list */
+.consensus-list {
+  list-style: none;
+  counter-reset: consensus;
+  margin: 16px 0;
+}
+.consensus-list li {
+  counter-increment: consensus;
+  position: relative;
+  padding: 12px 16px 12px 48px;
+  margin-bottom: 8px;
+  background: var(--green-light);
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--ink2);
+}
+.consensus-list li::before {
+  content: "C" counter(consensus);
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  background: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid #bbf7d0;
+}
+.consensus-list li strong {
+  color: var(--ink);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .doc-header { padding: 32px 20px 28px; }
+  .doc-header h1 { font-size: 24px; }
+  .container { padding: 24px 16px 60px; }
+  .toc ol { columns: 1; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .arch-flow { flex-direction: column; }
+  .arch-arrow { transform: rotate(90deg); width: 100%; height: 24px; }
+  .role-card { flex-direction: column; }
+}
+
+@media print {
+  body { background: #fff; font-size: 12px; }
+  .doc-header { background: #1e293b !important; -webkit-print-color-adjust: exact; }
+  .section { page-break-inside: avoid; }
+  .feature-card, .role-card, .unresolved-item { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ DOCUMENT HEADER ============ -->
+<div class="doc-header">
+  <span class="doc-type">PRD & CONSENSUS MEMO</span>
+  <h1>NodeHarvest</h1>
+  <p class="doc-subtitle">面向 AI Agent 的 Skill 发现、沉淀与调度工具链</p>
+  <div class="doc-meta">
+    <span><strong>文档版本：</strong>v0.4 (Draft)</span>
+    <span><strong>日期：</strong>2026-07-25</span>
+    <span><strong>状态：</strong><span class="badge badge-wip">草案待确认</span></span>
+    <span><strong>来源：</strong>项目功能开发与分工讨论录音 (43min)</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ============ TOC ============ -->
+<div class="toc">
+  <h3>目录</h3>
+  <ol>
+    <li><a href="#s1">项目概述</a></li>
+    <li><a href="#s2">产品定位与目标用户</a></li>
+    <li><a href="#s3">核心功能架构</a></li>
+    <li><a href="#s4">技术决策与共识</a></li>
+    <li><a href="#s5">产品形态定义</a></li>
+    <li><a href="#s6">团队分工模型</a></li>
+    <li><a href="#s7">开发路线图</a></li>
+    <li><a href="#s8">术语表</a></li>
+    <li><a href="#s9">产品边界与待决策事项</a></li>
+    <li><a href="#s10">后续行动项</a></li>
+  </ol>
+</div>
+
+<!-- ============ 1. PROJECT OVERVIEW ============ -->
+<div class="section" id="s1">
+  <h2 class="section-title"><span class="num">01</span> 项目概述</h2>
+
+  <h3 class="subsection-title">1.1 一句话定位</h3>
+  <div class="callout callout-info">
+    <strong>NodeHarvest</strong>
+    面向 AI Agent 的 Skill 发现、沉淀与调度工具链。
+  </div>
+  <p>围绕 AI Skill 生态，构建一套能力发现与调度的工具链。帮助用户高效发现、评估和调用各类 AI 可执行能力（Skill、插件、MCP、API），解决当前 AI 能力分散、缺乏统一入口和智能调度的问题。</p>
+
+  <h3 class="subsection-title">1.2 分阶段定位</h3>
+  <table class="data-table">
+    <tr>
+      <th style="width:120px;">阶段</th>
+      <th style="width:260px;">定位</th>
+      <th>说明</th>
+    </tr>
+    <tr>
+      <td><span class="badge badge-wip">当前 · MVP</span></td>
+      <td><strong>Skill 发现、沉淀与调度工具链</strong></td>
+      <td>以 Skill 为具体形态落地。扫描是顺手完成的基础设施，并非产品重点；优先复用并集成 HarnessKit 已成熟的扫描、识别与管理能力。NodeHarvest 集中投入 Skill 的<strong>沉淀</strong>（可管、可复用）和<strong>调用集成</strong>（Agent 动态匹配）。</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-pending">后续 · 演进</span></td>
+      <td><strong>AI 能力的统一发现与调度基础设施</strong></td>
+      <td>从 Skill 扩展到全品类 AI 能力（插件、MCP、API），成为异构能力的统一入口和调度层。保持工具链的可扩展性，避免过早发散。</td>
+    </tr>
+  </table>
+
+  <h3 class="subsection-title">1.3 项目背景</h3>
+  <p>开发者在日常工作中会跨平台使用多种 AI Agent（如 Claude、CodeBuddy、Coze 等），每个平台上安装了大量 Skill。这些 Skill 的调用记录散落在不同 Context 中，无法被有效提取和复用。当一个项目完成后，开发者无法系统性地回顾"在什么任务下调用了哪些 Skill、效果如何"，导致经验流失。</p>
+  <p>更深层的问题：当前 AI 能力（Skill、插件、MCP、API）<strong>高度分散</strong>，缺乏统一入口管理和智能调度机制。用户不知道自己有哪些能力可用、哪个能力最适合当前任务。NodeHarvest 从 Skill 切入，逐步构建统一的能力发现与调度层。</p>
+
+  <div class="callout callout-tip">
+    <strong>核心洞察</strong>
+    Skill 的本质是"AI 员工的入职手册"——它把现实世界的经验拆成大白话告诉 Agent。一个 Skill 只能专注于某个具体方面，过于宏观则失去指导意义。NodeHarvest 不创造 Skill，而是<strong>收割 Skill 使用过程中的经验节点</strong>，让能力可发现、可沉淀、可复用。
+  </div>
+
+  <h3 class="subsection-title">1.4 核心价值</h3>
+  <table class="data-table">
+    <tr>
+      <th style="width:180px;">价值点</th>
+      <th>说明</th>
+    </tr>
+    <tr>
+      <td>统一入口管理异构 AI 能力</td>
+      <td>Skill、插件、MCP、API 等不同类型的能力，通过一个工具统一发现和管理</td>
+    </tr>
+    <tr>
+      <td>提升能力发现与匹配效率</td>
+      <td>扫描本地已安装能力，辨别和评估可用性，支撑 Agent 的动态匹配决策</td>
+    </tr>
+    <tr>
+      <td>沉淀调用经验，实现跨项目复用</td>
+      <td>将工作过程中的 Skill 调用节点结构化为 Markdown，未来类似项目可直接复用</td>
+    </tr>
+    <tr>
+      <td>支撑后续调度决策</td>
+      <td>扫描结果直接支撑后续辨别与调度流程，为 Agent 智能调度提供数据基础</td>
+    </tr>
+  </table>
+
+  <h3 class="subsection-title">1.5 项目名称</h3>
+  <table class="data-table">
+    <tr>
+      <th style="width:120px;">名称</th>
+      <td><strong>NodeHarvest</strong></td>
+    </tr>
+    <tr>
+      <th>含义</th>
+      <td>收割节点（Node + Harvest）——从工作中收割关键上下文节点，沉淀为可复用知识</td>
+    </tr>
+    <tr>
+      <th>命名逻辑</th>
+      <td>务实、有画面感。"收割"呼应"沉淀"功能定位，"节点"对应能力调用中的关键时刻</td>
+    </tr>
+  </table>
+
+  <h3 class="subsection-title">1.6 已对齐原则</h3>
+  <ol class="consensus-list">
+    <li><strong>扫描是基础前置环节</strong>，覆盖所有可调用组件类型（Skill、插件、MCP、API），但不是产品重点——是顺手做的基础设施。</li>
+    <li><strong>核心在沉淀与调度</strong>：Skill 的沉淀（可管、可复用）和调用集成（Agent 动态匹配）才是真正的价值所在。</li>
+    <li><strong>扫描结果直接支撑后续流程</strong>：辨别 → 调度，不是独立功能而是链路的一环。</li>
+    <li><strong>MVP 聚焦核心链路</strong>：发现 → 沉淀 → 复用，避免过早发散到全品类能力管理。</li>
+    <li><strong>保持工具链的可扩展性</strong>：当前以 Skill 为切入点，架构上预留向插件/MCP/API 扩展的空间。</li>
+    <li><strong>四层模型收敛为三层</strong>：原“扫描 → 沉淀 → 使用 → 调用”中，“使用”与“调用”缺乏可执行的边界，现合并为“调用集成”，形成“扫描基础设施 → 沉淀与管理 → 调用集成”三层。</li>
+    <li><strong>优先集成 HarnessKit，而非重复建设扫描层</strong>：在遵守 Apache-2.0 许可证及资源例外条款的前提下，复用其 Agent/扩展发现、跨平台适配、审计和 CLI 等适合的核心能力，把主要研发资源投入第二、第三层。</li>
+  </ol>
+</div>
+
+<!-- ============ 2. POSITIONING ============ -->
+<div class="section" id="s2">
+  <h2 class="section-title"><span class="num">02</span> 产品定位与目标用户</h2>
+
+  <h3 class="subsection-title">2.1 双重定位</h3>
+  <table class="data-table">
+    <tr>
+      <th style="width:160px;">维度</th>
+      <th style="width:200px;">定位</th>
+      <th>说明</th>
+    </tr>
+    <tr>
+      <td>用户视角</td>
+      <td><strong>开发者效率工具</strong></td>
+      <td>帮开发者发现、管理和复用 AI 能力，提升工作效率</td>
+    </tr>
+    <tr>
+      <td>生态视角</td>
+      <td><strong>AI Agent 基础设施</strong></td>
+      <td>为 Agent 提供能力发现与调度的底层工具链，支撑智能调度决策</td>
+    </tr>
+  </table>
+
+  <h3 class="subsection-title">2.2 目标用户</h3>
+  <table class="data-table">
+    <tr>
+      <th style="width:140px;">核心用户</th>
+      <td>开发者 / OPC（超级个体）</td>
+    </tr>
+    <tr>
+      <th>用户特征</th>
+      <td>跨平台使用多种 AI Agent；同时推进多个项目；频繁安装和调用 Skill；关注效率提升</td>
+    </tr>
+    <tr>
+      <th>核心痛点</th>
+      <td>Skill 调用记录散落在不同 Context 中；无法回顾“什么任务下调用了什么 Skill、工作如何完成、效果与经验是什么”；历史经验无法结构化提取和复用</td>
+    </tr>
+    <tr>
+      <th>使用场景</th>
+      <td>项目完成后回顾"用了哪些 Skill、在什么任务下用的"；未来类似项目直接复用经验文档</td>
+    </tr>
+  </table>
+
+  <h3 class="subsection-title">2.3 非目标用户（当前阶段）</h3>
+  <ul style="margin-left:20px; color:var(--ink2); font-size:14px;">
+    <li>非开发者群体（不熟悉 CLI 操作的用户）</li>
+    <li>企业级团队协作场景（当前定位个人工具）</li>
+    <li>需要 GUI 交互的用户（当前不做图形界面）</li>
+  </ul>
+</div>
+
+<!-- ============ 3. CORE ARCHITECTURE ============ -->
+<div class="section" id="s3">
+  <h2 class="section-title"><span class="num">03</span> 核心功能架构</h2>
+
+  <p>原四层模型为“扫描 → 沉淀 → 使用 → 调用”。调研后确认，“使用”与“调用”当前没有稳定、可验证的产品边界，因此合并为<strong>调用集成</strong>。现阶段采用三层架构：第一层复用成熟基础设施，第二、第三层由 NodeHarvest 重点建设。</p>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <span class="fc-num">01</span>
+      <h4>扫描基础设施 (Scan)</h4>
+      <div class="fc-tag"><span class="badge badge-done">集成优先</span> 非核心差异化</div>
+      <p>发现本地 Agent、Skill、MCP、Plugin、Hook 与 Agent-first CLI，并处理跨平台路径和格式差异。该层优先接入 HarnessKit 已成熟且许可证允许复用的核心能力，不重复投入完整扫描系统。</p>
+    </div>
+    <div class="feature-card">
+      <span class="fc-num">02</span>
+      <h4>沉淀与管理 (Harvest)</h4>
+      <div class="fc-tag"><span class="badge badge-wip">MVP</span> 核心能力</div>
+      <p>从工作 Context 中提取 Skill 调用节点、任务语义、调用方式与结果反馈，形成可索引、可评估、可版本化、可复用的经验资产。Markdown 是首个载体，但数据模型不局限于文档。</p>
+    </div>
+    <div class="feature-card">
+      <span class="fc-num">03</span>
+      <h4>调用集成 (Invoke)</h4>
+      <div class="fc-tag"><span class="badge badge-wip">MVP</span> 核心能力</div>
+      <p>面向 Agent 暴露可查询、可匹配、可调用的能力入口，根据当前任务和历史沉淀动态推荐或选择 Skill，并记录调用反馈，形成“匹配 → 调用 → 反馈 → 再沉淀”的闭环。</p>
+    </div>
+    <div class="feature-card">
+      <span class="fc-num">+</span>
+      <h4>横向支撑能力</h4>
+      <div class="fc-tag"><span class="badge badge-pending">渐进建设</span></div>
+      <p>可视化管理、效果评估、GitHub 私有仓库同步与跨设备流转不再作为独立产品层，而是按需服务于沉淀层和调用层。</p>
+    </div>
+  </div>
+
+  <h3 class="subsection-title">3.1 HarnessKit 集成决策</h3>
+  <table class="data-table">
+    <tr><th style="width:170px;">决策项</th><th>共识</th></tr>
+    <tr><td>为什么接入</td><td>HarnessKit 已将多 Agent、多扩展类型的发现、路径适配、原位管理、安全审计及 CLI/Web 入口做得较完整，继续自研同类扫描能力会稀释 NodeHarvest 在沉淀与调用集成上的投入。</td></tr>
+    <tr><td>功能范围</td><td>产品决策是将 HarnessKit 的现有功能整体纳入 NodeHarvest 的扫描与能力管理基础设施，包括 Agent/扩展发现、路径与格式适配、扩展元数据、审计、CLI、Web 管理及其余可合法复用的功能。NodeHarvest 不在产品层重复讨论逐项取舍。</td></tr>
+    <tr><td>品牌与受限资源</td><td>功能可以集成，但不等于复制上游品牌。HarnessKit 名称、Logo、商标以及明确排除在 Apache-2.0 之外的美术资源不直接复用。</td></tr>
+    <tr><td>工程实现授权</td><td>库级复用、代码合并、CLI 调用、进程适配、版本固定与升级策略属于工程实现问题，由 AI/工程执行者依据可维护性、兼容性和许可证合规直接决策，不升级为产品未决问题。</td></tr>
+    <tr><td>许可证要求</td><td>HarnessKit 代码采用 Apache-2.0，可在满足保留许可证与归属声明、标注修改等条件下使用、修改和分发；其 README 明确排除的美术资源不纳入复用范围。正式集成前还需核对上游 NOTICE、依赖许可证和具体文件头。</td></tr>
+  </table>
+
+  <div class="callout callout-consensus">
+    <strong>研发资源分配</strong>
+    扫描层做到“可靠可用、便于接入”即可。NodeHarvest 的主要研发与产品验证资源集中在第二层“沉淀与管理”和第三层“调用集成”，并用真实 Agent 工作流验证两层之间的反馈闭环。
+  </div>
+
+  <h3 class="subsection-title">3.2 数据流架构</h3>
+  <div class="arch-flow">
+    <div class="arch-node">
+      <h5>HarnessKit 基础能力</h5>
+      <p>Agent / 扩展发现与适配</p>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node">
+      <h5>NodeHarvest 沉淀层</h5>
+      <p>节点提取 + 结构化经验</p>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node">
+      <h5>能力索引</h5>
+      <p>可管 + 可评估 + 可复用</p>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node">
+      <h5>调用集成层</h5>
+      <p>任务匹配 + Agent 调用</p>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node">
+      <h5>反馈闭环</h5>
+      <p>结果回流与持续优化</p>
+    </div>
+  </div>
+
+  <h3 class="subsection-title">3.3 沉淀文档结构（草案）</h3>
+  <p>提取出的 Markdown 文档应包含以下要素，每份文档对应一个项目/任务的关键节点记录：</p>
+  <table class="data-table">
+    <tr>
+      <th style="width:140px;">字段</th>
+      <th style="width:100px;">必填</th>
+      <th>说明</th>
+    </tr>
+    <tr>
+      <td>项目/任务名称</td>
+      <td>是</td>
+      <td>用户在调用 Skill 时同时输入的任务描述</td>
+    </tr>
+    <tr>
+      <td>Skill 列表</td>
+      <td>是</td>
+      <td>本项目调用的所有 Skill（含主动和被动）</td>
+    </tr>
+    <tr>
+      <td>调用方式</td>
+      <td>是</td>
+      <td>主动调用（用户指定） / 被动调用（Agent 自动）</td>
+    </tr>
+    <tr>
+      <td>调用上下文</td>
+      <td>是</td>
+      <td>"在什么情况下调用了这个 Skill"</td>
+    </tr>
+    <tr>
+      <td>时间戳</td>
+      <td>否</td>
+      <td>后续管理模块可补充调用耗时</td>
+    </tr>
+    <tr>
+      <td>效果备注</td>
+      <td>否</td>
+      <td>后续管理模块可补充效果评估</td>
+    </tr>
+  </table>
+
+  <div class="callout callout-info">
+    <strong>设计原则</strong>
+    沉淀文档保持<strong>极简</strong>——十几行、几百字。不追求大而全的记录，只提取关键节点。目标是"一个很简单的 Markdown，但包含了所有 Skill 调用与任务上下文的关联"。
+  </div>
+
+  <h3 class="subsection-title">3.4 Skill Flow：核心展示与管理对象</h3>
+  <p>NodeHarvest 不以“通关界面”、耗时排行榜或扫描列表作为核心展示，而是展示一条可回顾的 <strong>Skill Flow</strong>：把完成一项工作的关键任务节点，与其调用的 Skill 节点连接起来，形成经验路径。</p>
+  <table class="data-table">
+    <tr><th style="width:150px;">节点类型</th><th>展示内容</th><th style="width:180px;">管理价值</th></tr>
+    <tr><td>工作节点</td><td>要完成什么任务、任务所处阶段、产生了什么结果</td><td>还原工作的推进过程</td></tr>
+    <tr><td>Skill 节点</td><td>在该任务下调用了什么 Skill、主动或被动、为什么调用</td><td>建立任务与能力的关联</td></tr>
+    <tr><td>结果/经验节点</td><td>是否解决问题、效果如何、有哪些可复用经验或注意事项</td><td>支持复盘与下次匹配</td></tr>
+  </table>
+  <div class="callout callout-consensus">
+    <strong>核心输出</strong>
+    展示重点不是“用了多久”，而是“为了完成什么工作，在什么节点调用了什么 Skill，结果如何，留下了什么经验”。Skill Flow 既是可视化结构，也是后续检索、管理和 Agent 动态匹配的数据基础。
+  </div>
+
+  <h3 class="subsection-title">3.5 历史 Context 的整理方式</h3>
+  <p>NodeHarvest 不要求实时监听或强制捕获 Agent 的每一次调用。对于已经结束的项目，开发者可以在原有 Context 中加载 NodeHarvest CLI 与配套 Skill，也可以导出完整聊天记录、日志或其他可访问材料，再交给工具分析。配套 Skill 负责告诉 Agent 如何识别并整理其中的工作节点、Skill 节点和经验节点。</p>
+  <ol class="consensus-list">
+    <li><strong>输入由开发者决定。</strong> 可以使用当前 Context、历史对话、导出的完整聊天记录、Agent 日志或其他开发者能够取得的材料。</li>
+    <li><strong>工具做尽力提取，不承诺恢复不存在的信息。</strong> 如果上下文曾被压缩、摘要中省略了 Skill 调用，且记忆或日志中也没有保留，NodeHarvest 不负责重建缺失事实。</li>
+    <li><strong>不做强制侵入式采集。</strong> 不为追求“完整捕获”而深度侵入每个 Agent、强制常驻监听或制造额外复杂度。</li>
+    <li><strong>开发者拥有自由组合权。</strong> NodeHarvest 提供 CLI、数据结构和使用说明 Skill，不限制开发者如何取得、组合和分析输入。</li>
+  </ol>
+</div>
+
+<!-- ============ 4. TECHNICAL DECISIONS ============ -->
+<div class="section" id="s4">
+  <h2 class="section-title"><span class="num">04</span> 技术决策与共识</h2>
+
+  <p>以下为讨论中三方达成明确一致的关键决策点，作为开发基线约束。</p>
+
+  <ol class="consensus-list">
+    <li><strong>形态：CLI 工具，非 GUI。</strong> CLI 对 Agent 友好（命令式调用，无需精准控制鼠标事件），轻量化，开发周期短。面向开发者群体普遍熟悉 CLI 交互。暂不做图形界面。</li>
+    <li><strong>定位：工具，非子 Agent。</strong> NodeHarvest 是一个被 Agent 调用的工具（Tool），不独立接入 API。如果接入 API 则等同于独立 Agent，增加用户配置成本，偏离工具定位。</li>
+    <li><strong>Skill 配套：附带一份使用说明 Skill。</strong> 该 Skill 的作用是"告诉调用它的 Agent：这个工具是干什么用的、怎么用"。本质是一份教程/说明书。</li>
+    <li><strong>分工模式：问题驱动，非角色驱动。</strong> 不按前端/后端/服务器拆分，而是"谁提出问题，谁就解决那个问题"。讲话人1 搭建基础基座，其余各自认领自己发现的问题。</li>
+    <li><strong>开源策略：先开源，后考虑商业化。</strong> 当前阶段定位为效率工具，参考 Skill 社区模式——开源分享、社群交流、持续进步。不被长远的商业化困住。</li>
+    <li><strong>存储方案：GitHub 私人仓库。</strong> 作为免费云存储实现跨设备同步。这是当前最简单的方案，未来可替换。</li>
+    <li><strong>扫描层确定优先集成 HarnessKit。</strong> HarnessKit 已覆盖多 Agent 与多扩展类型的发现、管理、审计和 CLI 能力。NodeHarvest 不再从零建设完整扫描系统，而是以适配器/模块方式复用适合的核心部分。</li>
+    <li><strong>许可证合规是集成前置条件。</strong> 复用范围遵守 Apache-2.0 的许可证、归属和修改声明要求；不使用其明确排除在许可证之外的美术资源，并在落地前核对 NOTICE 与第三方依赖。</li>
+    <li><strong>历史整理采用开发者驱动、尽力提取。</strong> 用户自行提供当前 Context、历史对话、导出记录或日志；工具负责分析已有材料，不承诺恢复被上下文压缩或源系统丢弃的信息。</li>
+    <li><strong>不做强行完整捕获。</strong> NodeHarvest 不常驻监控所有 Agent，也不为完整记录而侵入各平台运行时。它是可自由组合的开发者工具，不是强制接管工作流的系统。</li>
+    <li><strong>Skill 耗时不属于产品指标。</strong> 核心展示是工作节点、Skill 节点、结果与经验之间的关系，而不是单个 Skill 的读取或执行秒数。</li>
+    <li><strong>产品决策与工程决策分离。</strong> 团队决定做什么、服务谁、提供什么价值；存在标准工程判断的问题由 AI/工程执行者依据约束直接落地，不进入产品未决清单。</li>
+  </ol>
+</div>
+
+<!-- ============ 5. PRODUCT FORM ============ -->
+<div class="section" id="s5">
+  <h2 class="section-title"><span class="num">05</span> 产品形态定义</h2>
+
+  <h3 class="subsection-title">5.1 交付物清单</h3>
+  <table class="data-table">
+    <tr>
+      <th style="width:160px;">交付物</th>
+      <th style="width:90px;">类型</th>
+      <th>说明</th>
+    </tr>
+    <tr>
+      <td>NodeHarvest CLI</td>
+      <td>核心工具</td>
+      <td>命令行工具，提供扫描、历史 Context 分析、Skill Flow 提取、沉淀、查询与调用集成等命令</td>
+    </tr>
+    <tr>
+      <td>nodeharvest.skill</td>
+      <td>配套 Skill</td>
+      <td>使用说明文档，教 Agent 如何调用本工具</td>
+    </tr>
+    <tr>
+      <td>扫描模块</td>
+      <td>集成模块</td>
+      <td>接入第三方 Skill 扫描工具</td>
+    </tr>
+    <tr>
+      <td>Skill Flow 数据规范</td>
+      <td>核心数据</td>
+      <td>定义工作节点、Skill 节点、结果/经验节点及其关系；支持 Markdown 输出和后续可视化</td>
+    </tr>
+  </table>
+
+  <h3 class="subsection-title">5.2 概念辨析：Skill / 插件 / MCP / 应用</h3>
+  <p>讨论中对这几个概念进行了澄清，以下为团队共识定义：</p>
+
+  <div class="glossary-item">
+    <span class="term">Skill</span><span class="term-en">技能</span>
+    <p>本质是"一份说明书 + 一些工具"。把具体怎么做某件事用清晰的大白话告诉 Agent。长度通常不超过千字，只专注于某一具体方面。相当于"AI 员工的入职手册"。</p>
+  </div>
+  <div class="glossary-item">
+    <span class="term">插件</span><span class="term-en">Plugin</span>
+    <p>Agent 平台的功能扩展，可以接入应用让智能体接管操作。面向 GUI 层的集成。</p>
+  </div>
+  <div class="glossary-item">
+    <span class="term">MCP</span><span class="term-en">Model Context Protocol</span>
+    <p>标准接入协议。所有兼容该协议的服务（无论是一个搜索工具还是一个自主 Agent）都可以接进来。本质是"拓展能力接入的标准接口"。</p>
+  </div>
+  <div class="glossary-item">
+    <span class="term">应用</span><span class="term-en">Application</span>
+    <p>Agent 平台中可接入的外部应用，让智能体接管操作。偏向业务系统集成。</p>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>关键认知对齐</strong>
+    NodeHarvest 不是 Skill、不是插件、不是 MCP、不是应用——它是一个<strong>CLI 工具</strong>。附带一份 Skill 作为使用说明。工具被 Agent 通过命令调用，返回结果。
+  </div>
+</div>
+
+<!-- ============ 6. TEAM DIVISION ============ -->
+<div class="section" id="s6">
+  <h2 class="section-title"><span class="num">06</span> 团队分工模型</h2>
+
+  <h3 class="subsection-title">6.1 分工原则：问题驱动</h3>
+  <p>本项目<strong>不采用传统的"前端/后端/服务器"三段式分工</strong>，而是采用<strong>"问题驱动分工"</strong>模式：每个人在讨论中提出的问题，就是他要解决的工作方向。提出问题 = 认领问题。</p>
+
+  <div class="callout callout-consensus">
+    <strong>分工逻辑</strong>
+    同一个项目，不需要前端、后端、服务器的角色拆分。每个人基于自己的理解和视角发现问题，问题的提出者就是解决者。讲话人1 负责搭建最基础的基座，其余各自认领。
+  </div>
+
+  <h3 class="subsection-title">6.2 参与者画像与认领方向</h3>
+
+  <div class="role-card">
+    <div class="role-avatar" style="background: var(--primary-light); color: var(--primary);">S1</div>
+    <div class="role-body">
+      <h5>讲话人1 · 架构师 / 引导者</h5>
+      <div class="role-label">角色定位：基座搭建 + 概念对齐 + 收敛总结</div>
+      <p>负责搭建项目基础架构（CLI 基座 + Skill 框架）。在讨论中持续澄清概念（CLI vs GUI、Skill vs 插件 vs MCP、Agent 架构），引导讨论从发散到收敛。产出 PRD 和共识文档。</p>
+    </div>
+  </div>
+
+  <div class="role-card">
+    <div class="role-avatar" style="background: var(--accent-light); color: var(--accent);">S2</div>
+    <div class="role-body">
+      <h5>讲话人2 · 务实派 / 验证者</h5>
+      <div class="role-label">角色定位：技术可行性验证 + 偏好反馈</div>
+      <p>发言精炼但直击要害。提出"不喜欢终端""CI 东西我不怎么用"等关键偏好反馈，验证设计方向。关注工具的实际使用体验和成熟度演进路径。</p>
+    </div>
+  </div>
+
+  <div class="role-card">
+    <div class="role-avatar" style="background: var(--purple-light); color: var(--purple);">S3</div>
+    <div class="role-body">
+      <h5>讲话人3 · 产品视角 / UX 代言人</h5>
+      <div class="role-label">角色定位：用户场景 + 展示需求 + 体验设计</div>
+      <p>产品感最强的角色。从用户视角持续追问"怎么展示""怎么演示""怎么让用户看到效率提升"。提出"通关界面""调用耗时展示""项目对比图"等产品化方向。同时带来摄影/编导领域的真实 Skill 使用经验。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 7. ROADMAP ============ -->
+<div class="section" id="s7">
+  <h2 class="section-title"><span class="num">07</span> 开发路线图</h2>
+
+  <p>按讨论收敛结果，开发分三个阶段推进。当前处于<strong>阶段一</strong>。</p>
+
+  <div class="timeline">
+    <div class="timeline-item done">
+      <div class="ti-time">已完成</div>
+      <div class="ti-title">讨论对齐 + 共识文档产出</div>
+      <div class="ti-desc">三方43分钟讨论，完成概念对齐、功能定义、分工模式确认。产出本 PRD 文档。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="ti-time">阶段一 · MVP · Skill 工具链</div>
+      <div class="ti-title">集成扫描基座 + 沉淀 + 调用闭环</div>
+      <div class="ti-desc">评估并接入 HarnessKit 的可复用核心能力；定义稳定的适配器边界；实现上下文节点提取、结构化沉淀、任务匹配与 Agent 调用反馈。附带使用说明 Skill。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="ti-time">阶段二 · 经验管理</div>
+      <div class="ti-title">Skill Flow 展示、检索与复用</div>
+      <div class="ti-desc">围绕工作节点、Skill 节点、结果与经验建立可视化关系，支持按项目、任务和 Skill 检索，帮助开发者复盘“什么任务用了什么 Skill、效果如何”，并为后续动态匹配提供依据。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="ti-time">阶段三 · 演进 · 统一调度基础设施</div>
+      <div class="ti-title">全品类能力 + 跨设备同步 + 开源生态</div>
+      <div class="ti-desc">从 Skill 扩展到插件/MCP/API 全品类能力管理。GitHub 仓库同步落地。开源发布，建立社群。定位演进为：AI 能力的统一发现与调度基础设施。</div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>阶段说明</strong>
+    MVP 聚焦核心链路：发现 → 沉淀 → 复用。扫描是基础前置环节（顺手做的基础设施），核心是沉淀（可管、可复用）和调用集成（Agent 动态匹配）。阶段三从 Skill 扩展到全品类 AI 能力，演进为统一调度基础设施。
+  </div>
+</div>
+
+<!-- ============ 8. GLOSSARY ============ -->
+<div class="section" id="s8">
+  <h2 class="section-title"><span class="num">08</span> 术语表</h2>
+
+  <table class="data-table">
+    <tr>
+      <th style="width:120px;">术语</th>
+      <th style="width:100px;">全称</th>
+      <th>定义</th>
+    </tr>
+    <tr>
+      <td>CLI</td>
+      <td>Command-Line Interface</td>
+      <td>命令行式交互。Agent 友好——只需知道命令即可调用，无需控制 GUI 鼠标事件。轻量化，开发周期短。</td>
+    </tr>
+    <tr>
+      <td>GUI</td>
+      <td>Graphical User Interface</td>
+      <td>图形用户界面。触摸/鼠标交互。开发复杂，当前阶段不采用。</td>
+    </tr>
+    <tr>
+      <td>Skill</td>
+      <td>—</td>
+      <td>Agent 的"入职手册"。把现实世界经验拆成大白话告诉 Agent 怎么做某件事。专注单一领域，不超过千字。</td>
+    </tr>
+    <tr>
+      <td>Agent</td>
+      <td>AI Agent</td>
+      <td>拥有工具调用能力 + LLM 推理能力的智能体。通过调用 Tool（函数/命令）执行任务并获取结果。</td>
+    </tr>
+    <tr>
+      <td>Sub-agent</td>
+      <td>子 Agent</td>
+      <td>主 Agent 调用的从属 Agent。复用主 Agent 的 API Key，Context 互不干扰。NodeHarvest <strong>不是</strong> Sub-agent。</td>
+    </tr>
+    <tr>
+      <td>Context</td>
+      <td>上下文</td>
+      <td>一次 Agent 对话的完整交互记录。Skill 调用记录散落在不同 Context 中。</td>
+    </tr>
+    <tr>
+      <td>节点</td>
+      <td>Node</td>
+      <td>Skill Flow 的基本单元，包括工作节点、Skill 节点与结果/经验节点；通过节点关系还原任务如何借助 Skill 完成。</td>
+    </tr>
+    <tr>
+      <td>OPC</td>
+      <td>One Person Company</td>
+      <td>超级个体 / 一人公司。NodeHarvest 的核心目标用户群体之一。</td>
+    </tr>
+    <tr>
+      <td>主动调用</td>
+      <td>Active Call</td>
+      <td>用户主动指定 Agent 使用某个 Skill（如通过"+"号附带）。</td>
+    </tr>
+    <tr>
+      <td>被动调用</td>
+      <td>Passive Call</td>
+      <td>Agent 在执行任务过程中自动调用 Skill，用户未显式指定。</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============ 9. PRODUCT BOUNDARIES ============ -->
+<div class="section" id="s9">
+  <h2 class="section-title"><span class="num">09</span> 产品边界与待决策事项</h2>
+
+  <p>本节区分“已经确认的产品边界”和“仍需团队选择的产品方向”。已有明确共识的事项不再重复标记为待定；存在标准答案的工程实现问题由 AI/工程执行者直接处理。</p>
+
+  <h3 class="subsection-title">9.1 已确认，不再列为未决问题</h3>
+  <table class="data-table">
+    <tr><th style="width:170px;">事项</th><th>结论</th></tr>
+    <tr><td>扫描结果怎么展示</td><td>扫描展示不是核心产品问题；HarnessKit 的现有能力整体纳入基础设施。NodeHarvest 自身的核心展示对象是 Skill Flow。</td></tr>
+    <tr><td>“通关界面”</td><td>不作为待决问题或 MVP 承诺。它仅保留为远期方向/分工灵感，不影响当前产品定义。</td></tr>
+    <tr><td>Skill 调用耗时</td><td>不适合本项目核心价值，不纳入产品指标和路线图。</td></tr>
+    <tr><td>被动调用完整捕获</td><td>不追求平台级完整捕获。开发者提供可访问的 Context、聊天导出或日志，NodeHarvest 尽力提取。</td></tr>
+    <tr><td>上下文被压缩</td><td>属于输入信息边界。源材料未保留的事实无法恢复，工具不为此实施侵入式监控。</td></tr>
+    <tr><td>Skill 粒度</td><td>属于通用 Skill 设计知识，与 NodeHarvest 当前产品范围无直接关系，从未决清单移除。</td></tr>
+    <tr><td>CLI 还是 Sub-agent</td><td>已明确：NodeHarvest 是给 Agent 使用的 CLI 基础设施，并附带说明 Skill；不演进为独立 Sub-agent。</td></tr>
+    <tr><td>HarnessKit 如何工程集成</td><td>产品上确定整体集成其合法可复用功能；具体技术路径由 AI/工程执行者决策。</td></tr>
+    <tr><td>GitHub 容量与频率</td><td>属于工程约束验证，不是产品方向问题。按轻量文本经验库设计，并由实现阶段处理仓库健康、文件组织与异常提示。</td></tr>
+  </table>
+
+  <h3 class="subsection-title">9.2 当前真正的产品待决事项</h3>
+  <div class="unresolved-item">
+    <div class="ui-header">
+      <span class="ui-id">P-01</span>
+      <h5>Skill Flow 的最小经验模型</h5>
+      <span class="badge badge-open">待验证</span>
+    </div>
+    <p>需要通过真实项目验证：工作节点、Skill 节点、结果/经验节点是否足以支持复盘与复用；“效果如何”采用自由文本、标签、状态还是多种方式组合。</p>
+    <div class="ui-context">判断标准：能否清晰回答“什么任务下调用了什么 Skill、为什么调用、工作如何完成、留下了什么经验”。</div>
+  </div>
+
+  <div class="unresolved-item">
+    <div class="ui-header">
+      <span class="ui-id">P-02</span>
+      <h5>沉淀经验如何进入 Agent 的动态匹配</h5>
+      <span class="badge badge-open">待验证</span>
+    </div>
+    <p>需要定义 Agent 查询历史经验时的最小输入与输出：当前任务如何描述，候选 Skill 如何排序，历史效果与经验如何参与推荐，以及调用后如何回写新的结果节点。</p>
+    <div class="ui-context">目标闭环：任务 → 匹配经验 → 推荐/调用 Skill → 记录结果 → 更新经验。</div>
+  </div>
+
+  <div class="unresolved-item">
+    <div class="ui-header">
+      <span class="ui-id">P-03</span>
+      <h5>开源边界与项目差异化</h5>
+      <span class="badge badge-open">待讨论</span>
+    </div>
+    <p>在整体开源方向下，仍需确定 NodeHarvest 自研的 Skill Flow 数据规范、经验匹配逻辑、调用闭环与社区资产如何形成明确差异化，以及各模块的发布边界。</p>
+  </div>
+</div>
+
+<!-- ============ 10. NEXT ACTIONS ============ -->
+<div class="section" id="s10">
+  <h2 class="section-title"><span class="num">10</span> 后续行动项</h2>
+
+  <table class="data-table">
+    <tr>
+      <th style="width:50px;">#</th>
+      <th style="width:100px;">负责人</th>
+      <th style="width:90px;">优先级</th>
+      <th>行动项</th>
+      <th style="width:90px;">状态</th>
+    </tr>
+    <tr>
+      <td>A1</td>
+      <td>讲话人1</td>
+      <td>P0</td>
+      <td>搭建 CLI 基座 + 使用说明 Skill 框架</td>
+      <td><span class="badge badge-pending">待启动</span></td>
+    </tr>
+    <tr>
+      <td>A2</td>
+      <td>讲话人1</td>
+      <td>P0</td>
+      <td>整体集成 HarnessKit 的合法可复用功能；由 AI/工程执行者确定技术路径并完成许可证、NOTICE 与依赖合规处理</td>
+      <td><span class="badge badge-wip">执行中</span></td>
+    </tr>
+    <tr>
+      <td>A3</td>
+      <td>讲话人3</td>
+      <td>P1</td>
+      <td>定义沉淀文档 Markdown 模板，结合摄影/编导项目实战经验验证</td>
+      <td><span class="badge badge-pending">待启动</span></td>
+    </tr>
+    <tr>
+      <td>A4</td>
+      <td>讲话人3</td>
+      <td>P1</td>
+      <td>基于真实项目设计 Skill Flow 原型，验证工作节点、Skill 节点、结果/经验节点能否支持复盘</td>
+      <td><span class="badge badge-pending">待启动</span></td>
+    </tr>
+    <tr>
+      <td>A5</td>
+      <td>讲话人2</td>
+      <td>P1</td>
+      <td>验证 CLI 工具在实际开发流程中的可用性，反馈使用体验</td>
+      <td><span class="badge badge-pending">待启动</span></td>
+    </tr>
+    <tr>
+      <td>A6</td>
+      <td>全体</td>
+      <td>P2</td>
+      <td>用 2~3 个已结束项目的 Context 或聊天导出验证历史整理流程，并确认 P-01/P-02 的最小产品模型</td>
+      <td><span class="badge badge-pending">待启动</span></td>
+    </tr>
+  </table>
+
+  <div class="callout callout-consensus">
+    <strong>协作方式</strong>
+    采用<strong>问题驱动</strong>模式。每个人在开发过程中发现的新问题，即为新的工作项。无需等待分配，发现问题即认领。基座搭建完成后，各自基于自己发现的问题方向独立推进。
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<div class="doc-footer">
+  <p>NodeHarvest PRD v0.4 · 更新于 2026-07-26 · 基于项目功能开发与分工讨论录音 (43min) 整理</p>
+  <p>本文档为团队共识备忘，非最终版。已确认事项不再重复进入未决清单；当前仅保留需要产品验证或团队选择的 P-01~P-03。</p>
+</div>
+
+</div>
+</body>
+</html>
