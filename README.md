@@ -6,6 +6,7 @@
 
 - `index.html`：产品需求与共识首页；
 - `docs/product-status-and-plan.md`：当前产品状态与执行计划；
+- `docs/usage.md`：面向用户的使用方法（沉淀 harvest / 复用 rehydrate）；
 - `docs/*.md`：公开专题文档的 Markdown 内容源；
 - `_layouts/document.html`：专题文档的统一 HTML 布局；
 - `_config.yml`：GitHub Pages 构建配置。
