@@ -1203,18 +1203,20 @@ p strong {
 
   <div class="callout callout-consensus">
     <strong>当前状态：可运行的能力发现基座</strong>
-    用户只需安装 NodeHarvest，即可自动接入经过校验的扫描能力，盘点本机 Skill、MCP、Plugin、Hook 和 Agent-first CLI。Scan 基础闭环已经形成；故障恢复与跨平台验收待补齐，Harvest 和 Invoke 尚未进入功能实现。
+    用户只需安装 NodeHarvest，即可自动接入经过校验的扫描能力，盘点本机 Skill、MCP、Plugin、Hook 和 Agent-first CLI。Scan 已具备结构化诊断和最后成功结果的安全降级；安装回滚与跨平台验收待补齐，Harvest 和 Invoke 尚未进入功能实现。
   </div>
 
   <p><a href="documents/product-status-and-plan.html"><strong>阅读当前产品状态、用户风险与下一阶段执行计划 →</strong></a></p>
+  <p><a href="documents/two-member-contribution-guide.html"><strong>阅读两位成员的贡献方式、交接规范与当前分工 →</strong></a></p>
 
   <table class="data-table">
     <tr><th style="width:180px;">进展项</th><th>当前状态</th></tr>
     <tr><td>源码研究</td><td>固定 v1.8.0 / db2d8a8，完整历史 627 个提交、23 个标签，249 个工程文件纳入逐文件审阅账本。</td></tr>
     <tr><td>集成边界</td><td>采用托管 HarnessKit provider + 独立进程 + 版本化 JSON 契约，不合并上游 Rust workspace 或 GUI。</td></tr>
     <tr><td>无感安装</td><td>已覆盖 macOS arm64/x64、Linux arm64/x64、Windows x64 的固定资产解析、摘要校验和原子安装。</td></tr>
-    <tr><td>验证</td><td>NodeHarvest 自动化测试 4 项通过；Linux x64 官方资产真实下载、校验、doctor 与 scan 闭环通过。</td></tr>
-    <tr><td>下一批</td><td>provider 状态机、结构化错误、最后成功扫描缓存、过期标识、回滚、多平台验证和许可证随 provider 落盘。</td></tr>
+    <tr><td>可靠降级</td><td>已实现 provider 状态、结构化错误、恢复建议、最后成功扫描快照，以及最新 / 过期 / 不可用状态区分。</td></tr>
+    <tr><td>验证</td><td>NodeHarvest 自动化测试 8 项通过；Linux x64 官方资产真实下载、校验、doctor 与 scan 闭环通过。</td></tr>
+    <tr><td>下一批</td><td>安装锁、损坏隔离、版本保留与回滚、多平台验证和许可证随 provider 落盘。</td></tr>
   </table>
 
   <p><a href="documents/harnesskit-foundation.html"><strong>阅读完整的 HarnessKit 基座与无感集成进展文档 →</strong></a></p>
