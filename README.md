@@ -1,10 +1,11 @@
 # NodeHarvest 公开文档站点
 
-本仓库承载 NodeHarvest 的公开共识、架构进展和研究摘要：<https://nodeharvest.github.io/>。
+本仓库承载 NodeHarvest 的公开共识、产品状态、执行计划、架构进展和研究摘要：<https://nodeharvest.github.io/>。
 
 ## 内容维护
 
 - `index.html`：产品需求与共识首页；
+- `docs/product-status-and-plan.md`：当前产品状态与执行计划；
 - `docs/*.md`：公开专题文档的 Markdown 内容源；
 - `_layouts/document.html`：专题文档的统一 HTML 布局；
 - `_config.yml`：GitHub Pages 构建配置。
