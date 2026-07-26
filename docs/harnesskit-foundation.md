@@ -20,30 +20,32 @@ NodeHarvest 已完成第一阶段的架构收敛、HarnessKit v1.8.0 源码审�
 - NodeHarvest 是面向 Agent 的 **CLI 工具**，不是 GUI 或独立 Agent；
 - 整体采用 **Scan → Harvest → Invoke** 三层架构；
 - HarnessKit 作为扫描与能力管理 provider，NodeHarvest 聚焦经验沉淀、能力匹配和结果回流；
-- 用户只安装 NodeHarvest，扫描 provider 由 NodeHarvest 自动准备、校验并接入；
+- 用户只安装 NodeHarvest，**包内已带 HarnessKit v1.8.0 官方 `hk` 二进制与 SHA-256 校验**，首次扫描不依赖任何外网下载；
 - 扫描层发生故障时，不能让 Harvest 与 Invoke 无条件误用错误或过期数据；
 - 产品决策、研究证据、计划、验证结果和重要问题必须进入项目仓库并形成可审阅提交。
 
 ## 一、架构结论
 
-NodeHarvest 采用 **托管 HarnessKit provider + 独立进程 + 版本化 JSON 契约**。
+NodeHarvest 采用 **内嵌 HarnessKit provider + 独立进程 + 版本化 JSON 契约**。
 
 ```text
 nodeharvest scan
-  ├─ 使用显式指定且兼容的 hk
-  ├─ 使用系统中已有且兼容的 hk
-  └─ 自动下载固定版本的官方 hk
+  ├─ 显式 provider 路径？── 使用并校验版本（source: explicit）
+  ├─ 包内内嵌 hk 摘要匹配？─ 复制到私有版本目录并落 manifest（source: embedded）
+  ├─ 私有版本目录有兼容 hk？─ 复用已验证版本（source: managed）
+  ├─ PATH 有兼容 hk？────── 仅在前面都失败时回退（source: system）
+  └─ 均无 ──────────────── 从登记的 GitHub Release URL 下载（兜底，source: managed）
           ↓ SHA-256 校验
      私有版本目录原子安装
-          ↓ 版本与契约校验
-     hk list --json
-          ↓ 严格适配
-     CapabilityInventory
+          ↓
+     hk list --json (schema v1)
+          ↓ 严格校验
+     CapabilityInventory v1
           ↓
      Harvest / Index / Invoke
 ```
 
-这条路径保留了 HarnessKit 的进程隔离和独立升级能力，同时让用户获得单一安装入口。NodeHarvest 不合并上游 Rust workspace，也不复制其 GUI、品牌或受限美术资源。
+这条路径让用户只安装 NodeHarvest 就能完成首次扫描，HarnessKit 仍保持进程隔离和独立升级能力。NodeHarvest 不合并上游 Rust workspace，也不复制其 GUI、品牌或受限美术资源。
 
 ## 二、HarnessKit 源码研究
 
@@ -86,26 +88,23 @@ HarnessKit 的安装、启停、删除和配置变更可能影响多个 Agent。
 首批实现已覆盖：
 
 - 用户显式 provider 路径优先；
-- 系统兼容 `hk` 自动复用；
-- 无兼容版本时自动识别系统与架构；
-- 支持 macOS arm64/x64、Linux arm64/x64、Windows x64；
-- 固定 HarnessKit v1.8.0 官方资产与 SHA-256；
-- 临时文件下载、完整性校验和原子安装；
-- 不修改 shell 配置，不覆盖系统已有 `hk`；
+- **包内 `third_party/harnesskit/binaries/<platform>-<arch>/hk[.exe]` 优先复用**，SHA-256 匹配即视为已准备就绪，`source: embedded`；
+- 内嵌缺失或 SHA-256 不匹配时，自动识别系统与架构，从登记的 GitHub Release URL 兜底下载（`source: managed`）；
 - 不支持平台提前拒绝；
 - 摘要不匹配时拒绝落盘；
-- 未知 JSON 契约版本拒绝解析。
+- 未知 JSON 契约版本拒绝解析；
+- macOS arm64/x64、Linux arm64/x64、Windows x64 全部覆盖；
+- `provider.json` 同时记录 `distribution: embedded | downloaded`、来源仓库、版本、平台、摘要、下载 URL，便于审计与回滚。
 
 ## 五、验证结果
 
 已完成的 NodeHarvest 验证包括：
 
-- 自动化测试：4 项通过；
+- 自动化测试：14 项通过（新增 2 项覆盖内嵌命中与降级）；
 - 发布包内容检查：通过；
-- Linux x64 官方二进制真实下载：通过；
-- 官方 SHA-256 真实校验：通过；
-- `doctor --json` 正确识别 HarnessKit 1.8.0；
-- `scan --json` 返回 NodeHarvest schema 1 / HarnessKit contract 1；
+- `verify:embedded` 按平台列出 PASS/FAIL：5/5 通过；
+- `doctor --json` 正确识别 HarnessKit 1.8.0，`source: embedded`；
+- `scan --json` 在零网络请求下返回 NodeHarvest schema 1 / HarnessKit contract 1；
 - 未发现能力时返回有效空清单，不误报为扫描故障。
 
 当前验证环境没有 Rust `cargo`，且未安装 HarnessKit 前端依赖，因此没有把上游 Rust/前端测试描述为已复跑通过。该限制已写入研究记录，后续应由固定 toolchain 的 CI 补齐。
