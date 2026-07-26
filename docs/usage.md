@@ -1,7 +1,7 @@
 ---
 layout: document
 title: 使用方法
-description: NodeHarvest 面向用户的两条链路：把今天的工作沉淀成精炼文档；换设备、换工具时一键恢复。
+description: NodeHarvest 面向用户的沉淀（harvest）与复用（rehydrate）两条链路与一行命令。
 permalink: /documents/usage.html
 ---
 
@@ -10,9 +10,12 @@ permalink: /documents/usage.html
 > 状态：MVP 共识  
 > 更新日期：2026-07-26
 
-## 这份文档面向谁
+## 设计原则
 
-面向**使用者**，不讲内部实现。复制下面的一行命令即可使用；不要在文档中寻找"为什么这样做"——那是实现层的事。
+- **精炼，不冗余**：只提取决策节点与经验节点，不复述整段聊天或代码改动。
+- **一行命令**：复制一行即可使用，不要求阅读源码。
+- **Skill 优先**：MVP 先把 Skill 维度打透，再扩到其他工具。
+- **不抢权威**：沉淀是参考输入，最终决策仍由人确认。
 
 ## 形态与分发
 
@@ -21,47 +24,46 @@ permalink: /documents/usage.html
 - 唯一用户入口：`nodeharvest`
 - 底层扫描依赖：HarnessKit 1.8.x（首次使用时自动准备，无需用户预装）
 
-## 沉淀：把今天的工作存成一份精炼文档
+## 两条用户链路
 
-### 方式 1：项目里直接沉淀
+### 沉淀（harvest）
+
+把当前项目里"做了什么、用了什么 Skill、为什么、结果如何"沉淀成一份可复用的经验 Markdown 文档。
 
 ```bash
+# 从当前工作目录直接沉淀
 npx -y nodeharvest harvest
+
+# 从聊天记录沉淀
+npx -y nodeharvest harvest --from chat-export.md
 ```
 
-复制一行，回车即可。
+输出约定：
 
-适用场景：在某个项目里做完工作后，想把这次的工作留一份精炼的记录。
+- 一份 Markdown 文件，包含 3 类节点：Work（工作）、Skill（技能）、Experience（经验）
+- 每个节点有唯一 id、来源引用、时间戳
+- 文档头部列出本次使用的 Skill 清单
+- 总长度按"精炼"原则裁剪，不做聊天回放
 
-### 方式 2：把聊天记录喂给它
+### 复用（rehydrate）
 
-```bash
-npx -y nodeharvest harvest --from <chat-export>.md
-```
+把沉淀下来的经验 Markdown 文档，连同基础层（HarnessKit）的一键迁移能力，恢复出可继续工作的环境与 Skill Flow。
 
-适用场景：你用 Claude Code、Codex、Cursor 等开发工具工作过，并已经导出了 Markdown 聊天记录。
-
-聊天记录怎么导出：开发工具社区都有开源方案，你是开发者就能找到。
-
-怎么用：把"导出的聊天记录 + 上面那行命令 + 示例 prompt"一起交给 NodeHarvest，工具会自己分析。
-
-## 复用：换设备、换工具也能继续
+`rehydrate` 一词由 `re-` + `hydrate` 组合而成：`hydrate` 在云原生/Docker 生态中表示"把声明恢复成可运行实例"，对应"换设备 / 换工具后恢复 Skill 环境"；`re-` 强调"按原路径再走一遍"，对应"沿用沉淀文档里的 Skill Flow"。一个词同时覆盖"恢复"与"回放"两层含义。
 
 ```bash
-# 在新设备/新工具上恢复
-npx -y nodeharvest rehydrate --from <experience>.md
+# 在新环境/新设备直接恢复
+npx -y nodeharvest rehydrate --from experience.md
 
 # 在当前环境只回放工作流（不迁移）
-npx -y nodeharvest rehydrate --from <experience>.md --mode replay
+npx -y nodeharvest rehydrate --from experience.md --mode replay
 ```
 
-适用场景：
+前置条件：
 
-- 在 NodeHarvest 里做了一份很棒的项目工作，想换到另一个工具里继续
-- 换了一台设备，想把工作环境拉回来
-- 想让另一台机器按原来用过的 Skill 继续干
-
-底层逻辑（用户无需关心）：经验文档里记录了"用过的 Skill 清单"，NodeHarvest 会联动基础层（HarnessKit）把这些相关 Skill 迁移过去；完成后按原本记录的 Skill Flow 继续工作，**不踩重复的坑**。
+- 当前环境已具备 Node.js 20+
+- 首次使用时会自动拉取并校验 HarnessKit 1.8.x
+- 迁移过程只读经验文档与 HarnessKit 仓库，不修改用户仓库的 git 历史
 
 ## 速查表
 
@@ -74,22 +76,11 @@ npx -y nodeharvest rehydrate --from <experience>.md --mode replay
 | 自检扫描能力是否可用 | `npx -y nodeharvest doctor --json` |
 | 列出本机已发现能力 | `npx -y nodeharvest scan --json` |
 
-## 哪些是用户需要知道的边界
+## 错误与边界
 
-- 沉淀出来的文档是**精炼的**，不是聊天回放——只保留"做了什么、为什么、结果如何"。
-- MVP 阶段先做 Skill 维度；通了之后其他工具（CLI / MCP / Hook 等）也按同样方式工作。
-- 经验文档记录了"用过的 Skill 清单"，是复用链路成立的前提。
-- 复用时不修改用户 shell 配置，不覆盖系统已有同名 Skill，不动你的 git 历史。
-
-## 错误时怎么知道发生了什么
-
-- 命令不工作时，复制行尾加 `--json` 可以得到机器可读的错误码与修复建议。
-- 例如 `nodeharvest doctor --json` 失败时会告诉你"原因 + 怎么修"。
-
-## 当前位置
-
-- `harvest` / `rehydrate` 命令正在实施中；本页面记录的是面向用户的最终接口形态。
-- 实际可用命令以 NodeHarvest 官方发版为准。
+- `harvest` 解析失败时返回稳定错误码与可读建议；不输出半成品文档覆盖原文件
+- `rehydrate` 在缺少经验文档、HarnessKit 不可用或来源不完整时拒绝执行
+- 所有写操作（生成经验文档、安装/迁移 Skill）默认要求目标路径可写；冲突时优先保留既有文件并提示
 
 ## 相关文档
 
