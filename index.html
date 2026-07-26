@@ -760,6 +760,7 @@ p strong {
     <tr><td>品牌与受限资源</td><td>功能可以集成，但不等于复制上游品牌。HarnessKit 名称、Logo、商标以及明确排除在 Apache-2.0 之外的美术资源不直接复用。</td></tr>
     <tr><td>工程实现授权</td><td>库级复用、代码合并、CLI 调用、进程适配、版本固定与升级策略属于工程实现问题，由 AI/工程执行者依据可维护性、兼容性和许可证合规直接决策，不升级为产品未决问题。</td></tr>
     <tr><td>许可证要求</td><td>HarnessKit 代码采用 Apache-2.0，可在满足保留许可证与归属声明、标注修改等条件下使用、修改和分发；其 README 明确排除的美术资源不纳入复用范围。正式集成前还需核对上游 NOTICE、依赖许可证和具体文件头。</td></tr>
+    <tr><td>内嵌二进制优先</td><td>每个 NodeHarvest 发布包自带 HarnessKit v1.8.0 官方 <code>hk</code> 二进制（5 个平台），SHA-256 固定在源码中，由 <code>scripts/verify-embedded-binary.mjs</code> 校验。用户只安装 NodeHarvest，首次 <code>scan</code> 不依赖任何外网下载；只有内嵌字节被替换、构建错误或包内缺失时才走 GitHub Release 下载兜底，并在 <code>provider.json</code> 记录 <code>distribution: embedded | downloaded</code>。</td></tr>
   </table>
 
   <div class="callout callout-consensus">
