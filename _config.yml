@@ -1,0 +1,6 @@
+title: NodeHarvest
+description: 面向 AI Agent 的 Skill 发现、沉淀与调度工具链
+lang: zh-CN
+markdown: kramdown
+exclude:
+  - README.md

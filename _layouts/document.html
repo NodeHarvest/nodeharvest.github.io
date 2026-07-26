@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ page.description | default: site.description | escape }}">
+  <title>{{ page.title | escape }} · NodeHarvest</title>
+  <style>
+    :root { color-scheme:light; --bg:#f7f8f6; --paper:#fff; --ink:#172019; --muted:#667068; --line:#dce3dd; --green:#176b3a; --green-soft:#e9f5ed; --code:#f1f4f1; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","Microsoft YaHei",sans-serif; }
+    .topbar { border-bottom:1px solid var(--line); background:rgba(255,255,255,.92); position:sticky; top:0; backdrop-filter:blur(10px); z-index:10; }
+    .topbar-inner { max-width:940px; margin:auto; padding:13px 24px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .brand { color:var(--ink); font-weight:750; text-decoration:none; letter-spacing:-.02em; }
+    .back { color:var(--green); text-decoration:none; font-size:14px; }
+    main { max-width:940px; margin:34px auto 72px; padding:0 24px; }
+    article { background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:clamp(26px,6vw,64px); box-shadow:0 12px 36px rgba(27,50,34,.05); }
+    h1,h2,h3 { line-height:1.3; letter-spacing:-.025em; scroll-margin-top:76px; }
+    h1 { font-size:clamp(30px,5vw,44px); margin:0 0 18px; }
+    h2 { font-size:26px; margin:48px 0 16px; padding-bottom:9px; border-bottom:1px solid var(--line); }
+    h3 { font-size:19px; margin:30px 0 10px; }
+    p { margin:12px 0; }
+    a { color:var(--green); }
+    blockquote { margin:20px 0; padding:14px 18px; background:var(--green-soft); border-left:4px solid var(--green); color:#31523b; }
+    blockquote p { margin:0; }
+    pre { overflow:auto; padding:18px; border:1px solid var(--line); border-radius:9px; background:#172019; color:#e7f3e9; line-height:1.55; }
+    code { padding:.16em .38em; border-radius:5px; background:var(--code); font:14px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    pre code { padding:0; color:inherit; background:transparent; }
+    ul,ol { padding-left:1.4em; }
+    li { margin:5px 0; }
+    table { display:block; width:100%; overflow:auto; border-collapse:collapse; margin:18px 0; }
+    th,td { border:1px solid var(--line); padding:10px 12px; text-align:left; }
+    th { background:var(--code); }
+    .meta { margin-top:34px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
+    @media (max-width:600px) { .topbar-inner,main { padding-left:16px; padding-right:16px; } article { border-radius:10px; padding:24px 20px; } }
+    @media print { .topbar { display:none; } body { background:#fff; } main { max-width:none; margin:0; padding:0; } article { border:0; box-shadow:none; padding:0; } }
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="topbar-inner"><a class="brand" href="{{ '/' | relative_url }}">NodeHarvest</a><a class="back" href="{{ '/' | relative_url }}">返回共识首页</a></div></header>
+  <main><article>
+    {{ content }}
+    <footer class="meta">此页面由公开 Markdown 文档自动构建 · 更新日期 {{ site.time | date: "%Y-%m-%d" }}</footer>
+  </article></main>
+</body>
+</html>

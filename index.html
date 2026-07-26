@@ -550,9 +550,9 @@ p strong {
   <h1>NodeHarvest</h1>
   <p class="doc-subtitle">面向 AI Agent 的 Skill 发现、沉淀与调度工具链</p>
   <div class="doc-meta">
-    <span><strong>文档版本：</strong>v0.4 (Draft)</span>
-    <span><strong>日期：</strong>2026-07-25</span>
-    <span><strong>状态：</strong><span class="badge badge-wip">草案待确认</span></span>
+    <span><strong>文档版本：</strong>v0.5 (Draft)</span>
+    <span><strong>日期：</strong>2026-07-26</span>
+    <span><strong>状态：</strong><span class="badge badge-wip">持续更新</span></span>
     <span><strong>来源：</strong>项目功能开发与分工讨论录音 (43min)</span>
   </div>
 </div>
@@ -573,6 +573,7 @@ p strong {
     <li><a href="#s8">术语表</a></li>
     <li><a href="#s9">产品边界与待决策事项</a></li>
     <li><a href="#s10">后续行动项</a></li>
+    <li><a href="#s11">最新工程进展</a></li>
   </ol>
 </div>
 
@@ -1196,9 +1197,31 @@ p strong {
   </div>
 </div>
 
+<!-- ============ 11. LATEST ENGINEERING PROGRESS ============ -->
+<div class="section" id="s11">
+  <h2 class="section-title"><span class="num">11</span> 最新工程进展</h2>
+
+  <div class="callout callout-consensus">
+    <strong>HarnessKit 基座与无感集成</strong>
+    已完成 HarnessKit v1.8.0 全量工程源码审阅、托管 provider 架构收敛和首批自动下载、SHA-256 校验、原子安装实现。用户只需安装 NodeHarvest，无需单独准备 HarnessKit。
+  </div>
+
+  <table class="data-table">
+    <tr><th style="width:180px;">进展项</th><th>当前状态</th></tr>
+    <tr><td>源码研究</td><td>固定 v1.8.0 / db2d8a8，完整历史 627 个提交、23 个标签，249 个工程文件纳入逐文件审阅账本。</td></tr>
+    <tr><td>集成边界</td><td>采用托管 HarnessKit provider + 独立进程 + 版本化 JSON 契约，不合并上游 Rust workspace 或 GUI。</td></tr>
+    <tr><td>无感安装</td><td>已覆盖 macOS arm64/x64、Linux arm64/x64、Windows x64 的固定资产解析、摘要校验和原子安装。</td></tr>
+    <tr><td>验证</td><td>NodeHarvest 自动化测试 4 项通过；Linux x64 官方资产真实下载、校验、doctor 与 scan 闭环通过。</td></tr>
+    <tr><td>下一批</td><td>provider 状态机、结构化错误、最后成功扫描缓存、过期标识、回滚、多平台验证和许可证随 provider 落盘。</td></tr>
+  </table>
+
+  <p><a href="documents/harnesskit-foundation.html"><strong>阅读完整的 HarnessKit 基座与无感集成进展文档 →</strong></a></p>
+  <p>专题文档以 Markdown 维护，并通过仓库自动化流程生成对应 HTML 页面；Markdown 更新后，公开页面会自动同步。</p>
+</div>
+
 <!-- ============ FOOTER ============ -->
 <div class="doc-footer">
-  <p>NodeHarvest PRD v0.4 · 更新于 2026-07-26 · 基于项目功能开发与分工讨论录音 (43min) 整理</p>
+  <p>NodeHarvest PRD v0.5 · 更新于 2026-07-26 · 基于项目功能开发与分工讨论及工程验证持续整理</p>
   <p>本文档为团队共识备忘，非最终版。已确认事项不再重复进入未决清单；当前仅保留需要产品验证或团队选择的 P-01~P-03。</p>
 </div>
 
